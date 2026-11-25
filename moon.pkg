@@ -3,5 +3,5 @@ import {
 }
 
 options(
-  link: { "js": { "exports": ["merge_csv"], "format": "esm" } },
+  link: { "js": { "exports": [ "merge_csv" ], "format": "esm" } },
 )

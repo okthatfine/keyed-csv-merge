@@ -2,7 +2,7 @@
 fn parse_csv(input : String) -> Result[Array[Array[String]], String] {
   let records : Array[Array[String]] = []
   let mut row : Array[String] = []
-  let mut field = StringBuilder::new()
+  let mut field = StringBuilder()
   let mut quoted = false
   let mut after_quote = false
   let mut after_cr = false
@@ -11,11 +11,15 @@ fn parse_csv(input : String) -> Result[Array[Array[String]], String] {
   for ch in input {
     if first {
       first = false
-      if ch == '\u{FEFF}' { continue }
+      if ch == '\u{FEFF}' {
+        continue
+      }
     }
     if after_cr {
       after_cr = false
-      if ch == '\n' { continue }
+      if ch == '\n' {
+        continue
+      }
     }
     if quoted {
       if ch == '"' {
@@ -28,7 +32,7 @@ fn parse_csv(input : String) -> Result[Array[Array[String]], String] {
     }
     if ch == ',' || ch == '\r' || ch == '\n' {
       row.push(field.to_string())
-      field = StringBuilder::new()
+      field = StringBuilder()
       started = false
       after_quote = false
       if ch != ',' {
@@ -37,18 +41,24 @@ fn parse_csv(input : String) -> Result[Array[Array[String]], String] {
         after_cr = ch == '\r'
       }
     } else if ch == '"' && (!started || after_quote) {
-      if after_quote { field.write_char('"') }
+      if after_quote {
+        field.write_char('"')
+      }
       quoted = true
       after_quote = false
       started = true
     } else if after_quote || ch == '"' {
-      return Err("unexpected character at record " + (records.length() + 1).to_string())
+      return Err(
+        "unexpected character at record " + (records.length() + 1).to_string(),
+      )
     } else {
       started = true
       field.write_char(ch)
     }
   }
-  if quoted { return Err("unterminated quoted field") }
+  if quoted {
+    return Err("unterminated quoted field")
+  }
   if started || row.length() > 0 {
     row.push(field.to_string())
     records.push(row)
@@ -58,20 +68,30 @@ fn parse_csv(input : String) -> Result[Array[Array[String]], String] {
 
 ///|
 fn encode_csv(rows : Array[Array[String]]) -> String {
-  let out = StringBuilder::new()
+  let out = StringBuilder()
   for row in rows {
     for i, value in row {
-      if i > 0 { out.write_char(',') }
+      if i > 0 {
+        out.write_char(',')
+      }
       let mut wrap = false
       for ch in value {
-        if ch == '"' || ch == ',' || ch == '\n' || ch == '\r' { wrap = true }
+        if ch == '"' || ch == ',' || ch == '\n' || ch == '\r' {
+          wrap = true
+        }
       }
-      if wrap { out.write_char('"') }
+      if wrap {
+        out.write_char('"')
+      }
       for ch in value {
-        if ch == '"' { out.write_char('"') }
+        if ch == '"' {
+          out.write_char('"')
+        }
         out.write_char(ch)
       }
-      if wrap { out.write_char('"') }
+      if wrap {
+        out.write_char('"')
+      }
     }
     out.write_string("\r\n")
   }

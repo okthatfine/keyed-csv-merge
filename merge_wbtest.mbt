@@ -1,6 +1,8 @@
 ///|
 test "disjoint edits survive reordered headers and rows" {
-  let r = merge_report("id,x,y\na,1,2\nb,3,4", "x,id,y\n3,b,4\n10,a,2", "id,x,y\na,1,20\nb,3,4", "id")
+  let r = merge_report(
+    "id,x,y\na,1,2\nb,3,4", "x,id,y\n3,b,4\n10,a,2", "id,x,y\na,1,20\nb,3,4", "id",
+  )
   assert_eq(r.csv, Some("id,x,y\r\na,10,20\r\nb,3,4\r\n"))
 }
 
@@ -33,7 +35,8 @@ test "concurrent additions with incompatible values conflict" {
 
 ///|
 test "invalid snapshots cannot be treated as deleted rows" {
-  for bad in ["id,x\na,1\na,2", "id,x\na", "id,x\n,1", "id,id\na,b", "id,z\na,1"] {
-    assert_eq(merge_report("id,x",bad,"id,x","id").status, "invalid")
+  for
+    bad in ["id,x\na,1\na,2", "id,x\na", "id,x\n,1", "id,id\na,b", "id,z\na,1"] {
+    assert_eq(merge_report("id,x", bad, "id,x", "id").status, "invalid")
   }
 }
