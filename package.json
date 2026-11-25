@@ -1,0 +1,1 @@
+{"name":"keyed-csv-merge","private":true,"type":"module","scripts":{"build":"moon build --target js --release","test:cli":"node --test cli.test.mjs"}}
