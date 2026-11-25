@@ -1,4 +1,5 @@
 ///|
+#derive(@json.ToJson)
 priv struct Conflict {
   key : String
   column : String?
@@ -6,15 +7,16 @@ priv struct Conflict {
   base : Array[String]?
   left : Array[String]?
   right : Array[String]?
-} derive(ToJson)
+}
 
 ///|
+#derive(@json.ToJson)
 priv struct Report {
   status : String
   csv : String?
   error : String?
   conflicts : Array[Conflict]
-} derive(ToJson)
+}
 
 ///|
 fn reconcile(b : Table, l : Table, r : Table) -> Report {
